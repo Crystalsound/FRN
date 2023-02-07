@@ -1,0 +1,6 @@
+batch_size: 90
+input: mag
+lstm_dim: 512
+lstm_layers: 1
+output: mag
+window_size: 960

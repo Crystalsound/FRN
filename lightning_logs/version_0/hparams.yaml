@@ -1,0 +1,6 @@
+batch_size: 90
+cnn_dim: 64
+cnn_layers: 5
+lstm_dim: 512
+lstm_layers: 1
+window_size: 960
