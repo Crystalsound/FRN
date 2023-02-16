@@ -1,6 +1,6 @@
 # FRN - Full-band Recurrent Network Official Implementation
 
-**Improving performance of real-time full-band blind packet-loss concealment with predictive network - submitted to ICASSP 2023**
+**Improving performance of real-time full-band blind packet-loss concealment with predictive network - ICASSP 2023**
 
 [![Generic badge](https://img.shields.io/badge/arXiv-2211.04071-brightgreen.svg?style=flat-square)](https://arxiv.org/abs/2211.04071)
 [![Generic badge](https://img.shields.io/github/stars/Crystalsound/FRN?color=yellow&label=FRN&logo=github&style=flat-square)](https://github.com/Crystalsound/FRN/)
