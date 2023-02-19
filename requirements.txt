@@ -12,6 +12,6 @@ soundfile==0.11.0
 torch==1.13.1
 torchmetrics==0.11.0
 tqdm==4.64.0
-stoi==0.3.3
+pystoi==0.3.3
 pesq==0.0.4
 onnx==1.13.0
