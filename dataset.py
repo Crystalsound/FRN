@@ -67,7 +67,7 @@ class MaskGenerator:
         else:
             assert len(probs) == 1
             prob = self.probs[0]
-            self.mcs.append(MarkovChain([[probs[0], 1 - prob[0]], [1 - prob[1], prob[1]]], ['1', '0']))
+            self.mcs.append(MarkovChain([[prob[0], 1 - prob[0]], [1 - prob[1], prob[1]]], ['1', '0']))
 
     def gen_mask(self, length, seed=0):
         if self.is_train:

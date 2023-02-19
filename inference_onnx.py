@@ -38,8 +38,8 @@ if __name__ == '__main__':
     for file in tqdm.tqdm(audio_files, total=len(audio_files)):
         sig, _ = librosa.load(file, sr=48000)
         sig = torch.tensor(sig)
-        re_im = torch.stft(sig, window, stride, window=hann, return_complex=False).permute(2, 0, 1).unsqueeze(
-            0).numpy().astype(np.float32)
+        re_im = torch.stft(sig, window, stride, window=hann, return_complex=False).permute(1, 0, 2).unsqueeze(
+    1).numpy().astype(np.float32)
 
         inputs = {input_names[i]: np.zeros([d.dim_value for d in _input.type.tensor_type.shape.dim],
                                            dtype=np.float32)
@@ -48,8 +48,7 @@ if __name__ == '__main__':
 
         output_audio = []
         for t in range(re_im.shape[-1]):
-            ri_t = re_im[:, :, :, t:t + 1]
-            inputs[input_names[0]] = ri_t
+            inputs[input_names[0]] = re_im[t]
             out, prev_mag, predictor_state, mlp_state = session.run(output_names, inputs)
             inputs[input_names[1]] = prev_mag
             inputs[input_names[2]] = predictor_state
