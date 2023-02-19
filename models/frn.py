@@ -92,11 +92,11 @@ class PLCModel(pl.LightningModule):
 
     def train_dataloader(self):
         return DataLoader(self.train_dataset, shuffle=False, batch_size=self.hparams.batch_size,
-                          num_workers=CONFIG.TRAIN.workers)
+                          num_workers=CONFIG.TRAIN.workers, persistent_workers=True)
 
     def val_dataloader(self):
         return DataLoader(self.val_dataset, shuffle=False, batch_size=self.hparams.batch_size,
-                          num_workers=CONFIG.TRAIN.workers)
+                          num_workers=CONFIG.TRAIN.workers, persistent_workers=True)
 
     def training_step(self, batch, batch_idx):
         x_in, y = batch

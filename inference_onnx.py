@@ -49,6 +49,7 @@ if __name__ == '__main__':
         output_audio = []
         for t in range(re_im.shape[-1]):
             ri_t = re_im[:, :, :, t:t + 1]
+            inputs[input_names[0]] = ri_t
             out, prev_mag, predictor_state, mlp_state = session.run(output_names, inputs)
             inputs[input_names[1]] = prev_mag
             inputs[input_names[2]] = predictor_state

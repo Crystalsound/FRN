@@ -4,7 +4,7 @@ import os
 import pytorch_lightning as pl
 import soundfile as sf
 import torch
-from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.callbacks import ModelCheckpoint, StochasticWeightAveraging
 from pytorch_lightning.utilities.model_summary import summarize
 from torch.utils.data import DataLoader
 
@@ -65,9 +65,8 @@ def train():
                          gradient_clip_val=CONFIG.TRAIN.clipping_val,
                          gpus=len(gpus),
                          max_epochs=CONFIG.TRAIN.epochs,
-                         accelerator="ddp" if len(gpus) > 1 else None,
-                         stochastic_weight_avg=True,
-                         callbacks=[checkpoint_callback]
+                         accelerator="gpu" if len(gpus) > 1 else None,
+                         callbacks=[checkpoint_callback, StochasticWeightAveraging(swa_lrs=1e-2)]
                          )
 
     print(model.hparams)

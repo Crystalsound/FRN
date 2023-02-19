@@ -24,23 +24,23 @@ def mkdir_p(mypath):
             raise
 
 
-def visualize(hr, lr, recon, path):
+def visualize(target, input, recon, path):
     sr = CONFIG.DATA.sr
     window_size = 1024
     window = np.hanning(window_size)
 
-    stft_hr = librosa.core.spectrum.stft(hr, n_fft=window_size, hop_length=512, window=window)
+    stft_hr = librosa.core.spectrum.stft(target, n_fft=window_size, hop_length=512, window=window)
     stft_hr = 2 * np.abs(stft_hr) / np.sum(window)
 
-    stft_lr = librosa.core.spectrum.stft(lr, n_fft=window_size, hop_length=512, window=window)
+    stft_lr = librosa.core.spectrum.stft(input, n_fft=window_size, hop_length=512, window=window)
     stft_lr = 2 * np.abs(stft_lr) / np.sum(window)
 
     stft_recon = librosa.core.spectrum.stft(recon, n_fft=window_size, hop_length=512, window=window)
     stft_recon = 2 * np.abs(stft_recon) / np.sum(window)
 
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharey=True, sharex=True, figsize=(16, 10))
-    ax1.title.set_text('HR signal')
-    ax2.title.set_text('LR signal')
+    ax1.title.set_text('Target signal')
+    ax2.title.set_text('Lossy signal')
     ax3.title.set_text('Reconstructed signal')
 
     canvas = FigureCanvas(fig)
