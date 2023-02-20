@@ -4,8 +4,6 @@
 
 [![Generic badge](https://img.shields.io/badge/arXiv-2211.04071-brightgreen.svg?style=flat-square)](https://arxiv.org/abs/2211.04071)
 [![Generic badge](https://img.shields.io/github/stars/Crystalsound/FRN?color=yellow&label=FRN&logo=github&style=flat-square)](https://github.com/Crystalsound/FRN/)
-
-[//]: # ([![Generic badge]&#40;https://img.shields.io/github/last-commit/Crystalsound/FRN?color=blue&label=last%20commit&style=flat-square&#41;]&#40;https://github.com/Crystalsound/FRN/commits&#41;)
 [![Generic badge](https://img.shields.io/badge/GitHub.io-Audio_Samples-blue?color=blue&label=GitHub.io&style=flat-square)](https://crystalsound.github.io/FRN/)
 [![Generic badge](https://img.shields.io/badge/Demo-HuggingFace-yellow?color=yellow&label=Demo&style=flat-square)](https://huggingface.co/spaces/anhnv125/FRN)
 
