@@ -209,7 +209,6 @@ class TrainDataset(Dataset):
 
         sig = sig.reshape(-1).astype(np.float32)
 
-        sig = sig.reshape((1, -1))
         target = torch.tensor(sig.copy())
         p_size = random.choice(self.p_sizes)
 
@@ -218,10 +217,8 @@ class TrainDataset(Dataset):
         sig *= mask
         sig = torch.tensor(sig.copy())
 
-        sig = sig.reshape(1, -1)
-
-        target = torch.stft(target.squeeze(0), self.chunk_len, self.stride, window=self.hann,
+        target = torch.stft(target, self.chunk_len, self.stride, window=self.hann,
                             return_complex=False).permute(2, 0, 1).float()
-        sig = torch.stft(sig.squeeze(0), self.chunk_len, self.stride, window=self.hann, return_complex=False)
+        sig = torch.stft(sig, self.chunk_len, self.stride, window=self.hann, return_complex=False)
         sig = sig.permute(2, 0, 1).float()
         return sig, target
