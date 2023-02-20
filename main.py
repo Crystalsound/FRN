@@ -104,21 +104,21 @@ if __name__ == '__main__':
         model.freeze()
         if args.mode == 'eval':
             model.cuda(device=0)
-            trainer = pl.Trainer(gpus=1)
+            trainer = pl.Trainer(accelerator='gpu', devices=1, enable_checkpointing=False, logger=False)
             testset = TestLoader()
             test_loader = DataLoader(testset, batch_size=1, num_workers=4)
             trainer.test(model, test_loader)
             print('Version', args.version)
             masking = CONFIG.DATA.EVAL.masking
             prob = CONFIG.DATA.EVAL.transition_probs[0]
-            loss_percent = (1 - prob[0]) / (2 - prob[0][prob[1]]) * 100
+            loss_percent = (1 - prob[0]) / (2 - prob[0] - prob[1]) * 100
             print('Evaluate with real trace' if masking == 'real' else
-                  'Evaluate with generated trace {}% packet loss'.format(str(prob)))
+                  'Evaluate with generated trace with {:.2f}% packet loss'.format(prob))
         elif args.mode == 'test':
             model.cuda(device=0)
             testset = BlindTestLoader(test_dir=CONFIG.TEST.in_dir)
             test_loader = DataLoader(testset, batch_size=1, num_workers=4)
-            trainer = pl.Trainer(gpus=1)
+            trainer = pl.Trainer(accelerator='gpu', devices=1, enable_checkpointing=False, logger=False)
             preds = trainer.predict(model, test_loader, return_predictions=True)
             mkdir_p(CONFIG.TEST.out_dir)
             for idx, path in enumerate(test_loader.dataset.data_list):

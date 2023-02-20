@@ -160,8 +160,8 @@ class PLCModel(pl.LightningModule):
             sf.write(os.path.join(path, 'lossy_input.wav'), inp_wav, samplerate=CONFIG.DATA.sr, subtype='PCM_16')
             sf.write(os.path.join(path, 'target.wav'), tar_wav, samplerate=CONFIG.DATA.sr, subtype='PCM_16')
         if CONFIG.DATA.sr != 16000:
-            pred = librosa.resample(pred, 48000, 16000)
-            tar_wav = librosa.resample(tar_wav, 48000, 16000, res_type='kaiser_fast')
+            pred = librosa.resample(pred, orig_sr=48000, target_sr=16000)
+            tar_wav = librosa.resample(tar_wav, orig_sr=48000, target_sr=16000, res_type='kaiser_fast')
         ret = plcmos.run(pred, tar_wav)
         pesq = self.pesq(torch.tensor(pred), torch.tensor(tar_wav))
         metrics = {
