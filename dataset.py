@@ -140,7 +140,7 @@ class TestLoader(Dataset):
 
 class BlindTestLoader(Dataset):
     def __init__(self, test_dir):
-        self.data_list = glob.glob(os.path.join(test_dir, '*.wav'))[:10]
+        self.data_list = glob.glob(os.path.join(test_dir, '*.wav'))
         self.sr = CONFIG.DATA.sr
         self.stride = CONFIG.DATA.stride
         self.chunk_len = CONFIG.DATA.window_size
