@@ -117,7 +117,7 @@ class Predictor(pl.LightningModule):  # mel
         fb = librosa.filters.mel(sr=sr, n_fft=self.window_size, n_mels=self.n_mels)[:, 1:]
         self.fb = torch.from_numpy(fb).unsqueeze(0).unsqueeze(0)
         self.lstm = nn.LSTM(input_size=self.n_mels, hidden_size=self.lstm_dim, bidirectional=False,
-                            num_layers=self.lstm_layers)
+                            num_layers=self.lstm_layers, batch_first=True)
         self.expand_dim = nn.Linear(self.lstm_dim, self.n_mels)
         self.inv_mel = nn.Linear(self.n_mels, self.hop_size)
 

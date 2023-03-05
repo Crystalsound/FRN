@@ -66,7 +66,7 @@ class PLCModel(pl.LightningModule):
 
         x = x.permute(3, 0, 1, 2).unsqueeze(-1)
         prev_mag = torch.zeros((B, 1, F, 1), device=x.device)
-        predictor_state = torch.zeros((2, self.predictor.lstm_layers, 1, self.predictor.lstm_dim), device=x.device)
+        predictor_state = torch.zeros((2, self.predictor.lstm_layers, B, self.predictor.lstm_dim), device=x.device)
         mlp_state = torch.zeros((self.encoder.depth, 2, 1, B, self.encoder.dim), device=x.device)
         result = []
         for step in x:
@@ -201,7 +201,7 @@ class OnnxWrapper(pl.LightningModule):
         super().__init__(*args, **kwargs)
         self.model = model
         batch_size = 1
-        pred_states = torch.zeros((2, 1, 1, model.predictor.lstm_dim))
+        pred_states = torch.zeros((2, 1, batch_size, model.predictor.lstm_dim))
         mlp_states = torch.zeros((model.encoder.depth, 2, 1, batch_size, model.encoder.dim))
         mag = torch.zeros((batch_size, 1, model.hop_size, 1))
         x = torch.randn(batch_size, model.hop_size + 1, 2)
