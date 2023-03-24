@@ -215,7 +215,7 @@ class TrainDataset(Dataset):
         sig = np.reshape(sig, (-1, p_size))
         mask = self.mask_generator.gen_mask(len(sig), seed=index)[:, np.newaxis]
         sig *= mask
-        sig = torch.tensor(sig.copy())
+        sig = torch.tensor(sig.copy()).reshape(-1)
 
         target = torch.stft(target, self.chunk_len, self.stride, window=self.hann,
                             return_complex=False).permute(2, 0, 1).float()
