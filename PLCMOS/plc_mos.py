@@ -7,8 +7,6 @@ import onnxruntime as ort
 from numpy.fft import rfft
 from numpy.lib.stride_tricks import as_strided
 
-from utils.utils import LSD
-
 
 class PLCMOSEstimator():
     def __init__(self, model_version=1):
@@ -155,93 +153,3 @@ class PLCMOSEstimator():
         mos_2 = float(session.run(None, onnx_inputs)[0])
         mos = [mos, mos_2]
         return mos
-
-
-def run_with_defaults(degraded, clean, allow_set_size_difference=False, progress=False, model_ver=1):
-    import soundfile as sf
-    import glob
-    import tqdm
-    import pandas as pd
-
-    if os.path.isfile(degraded):
-        degraded = [degraded]
-    else:
-        degraded = list(glob.glob(os.path.join(degraded, "*.wav")))
-
-    if os.path.isfile(clean):
-        clean = [clean] * len(degraded)
-    else:
-        clean = list(glob.glob(os.path.join(clean, "*.wav")))
-
-    degraded = list(sorted(degraded))
-    clean = list(sorted(clean))
-
-    if not allow_set_size_difference:
-        assert len(degraded) == len(clean)
-
-    clean_dict = {os.path.basename(x): x for x in clean}
-    clean = []
-    for degraded_name in degraded:
-        clean.append(clean_dict[os.path.basename(degraded_name)])
-    assert len(degraded) == len(clean)
-
-    iter = zip(degraded, clean)
-    if progress:
-        iter = tqdm.tqdm(iter, total=len(degraded))
-    results = []
-
-    estimator = PLCMOSEstimator(model_version=model_ver)
-    intr = []
-    nonintr = []
-    lsds = []
-    sisdrs = []
-    for degraded_name, clean_name in iter:
-        audio_degraded, sr_degraded = sf.read(degraded_name)
-        audio_clean, sr_clean = sf.read(clean_name)
-        lsd = LSD(audio_clean, audio_degraded)
-        audio_degraded = librosa.resample(audio_degraded, 48000, 16000, res_type='kaiser_fast')
-        audio_clean = librosa.resample(audio_clean, 48000, 16000, res_type='kaiser_fast')
-
-        score = estimator.run(audio_degraded, audio_clean)
-        results.append(
-            {
-                "filename_degraded": degraded_name,
-                "filename_clean": clean_name,
-                "intrusive" + str(model_ver): score[0],
-                "non-intrusive" + str(model_ver): score[1],
-
-            }
-        )
-        lsds.append(lsd)
-        intr.append(score[0])
-        nonintr.append(score[1])
-        iter.set_description("Intru {}, Non-Intr {}, LSD {}, SISDR {}".format(sum(intr) / len(intr),
-                                                                              sum(nonintr) / len(nonintr),
-                                                                              sum(lsds) / len(lsds),
-                                                                              sum(sisdrs) / len(sisdrs)))
-
-    return pd.DataFrame(results)
-
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--degraded", type=str, required=True, help="Path to folder with degraded audio files")
-    parser.add_argument("--clean", type=str, required=True, help="Path to folder with clean audio files")
-    parser.add_argument("--model-ver", type=int, default=1, help="Model version to use")
-    parser.add_argument("--out-csv", type=str, default=None, help="Path to output CSV file, if CSV output is desired")
-    parser.add_argument("--allow-set-size-difference", type=bool, default=True,
-                        help="Set to true to allow the number of degraded and clean audio files to be different")
-    args = parser.parse_args()
-
-    results = run_with_defaults(args.degraded, args.clean, args.allow_set_size_difference, True, args.model_ver)
-
-    if args.out_csv is not None:
-        results.to_csv(args.out_csv)
-    else:
-        import pandas as pd
-
-        pd.set_option("display.max_rows", None)
-        # print(results)
-        print("")
