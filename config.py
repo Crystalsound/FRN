@@ -45,7 +45,7 @@ class CONFIG:
 
         class EVAL:
             packet_size = 960  # 20ms
-            transition_probs = ((0.9, 0.1))  # (0.9, 0.1) ~ 10%; (0.8, 0.2) ~ 20%; (0.6, 0.4) ~ 40%
+            transition_probs = [(0.9, 0.1)]  # (0.9, 0.1) ~ 10%; (0.8, 0.2) ~ 20%; (0.6, 0.4) ~ 40%
             masking = 'gen'  # whether using simulation or real traces from Microsoft to generate masks
             assert masking in ['gen', 'real']
             trace_path = 'test_samples/blind/lossy_singals'  # must be clarified if masking = 'real'
