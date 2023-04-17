@@ -152,7 +152,7 @@ class PLCModel(pl.LightningModule):
         pred = pred.detach().cpu().numpy()
         lsd, _ = LSD(tar_wav, pred)
 
-        if batch_idx in [3, 5, 7]:
+        if batch_idx in [5, 7, 9]:
             sample_path = os.path.join(CONFIG.LOG.sample_path)
             path = os.path.join(sample_path, 'sample_' + str(batch_idx))
             visualize(tar_wav, inp_wav, pred, path)
